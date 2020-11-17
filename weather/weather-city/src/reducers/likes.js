@@ -1,11 +1,11 @@
 
-const visibilityFilter = (state = VisibilityFilters.SHOW_ALL, action) => {
+const likes = (state, action) => {
   switch (action.type) {
-    case 'SET_VISIBILITY_FILTER':
-      return action.filter
+    case 'ADD_LIKE_CITY':
+      return action
     default:
       return state
   }
 }
 
-export default visibilityFilter
+export default likes

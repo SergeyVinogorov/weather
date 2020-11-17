@@ -3,6 +3,6 @@ import likes from './likes'
 import cities from './cities'
 
 export default combineReducers({
-  likes,
+//   likes,
   cities
 })
