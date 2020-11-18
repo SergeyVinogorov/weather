@@ -1,23 +1,19 @@
-const todos = (state = [], action) => {
+import { ADD_CITY } from "../actions/actionTypes";
+
+const initialState = {
+  selectedCity: []
+};
+const cities = (state = initialState, action) => {
+		debugger
+
   switch (action.type) {
-    case 'ADD_TODO':
-      return [
-        ...state,
-        {
-          id: action.id,
-          text: action.text,
-          completed: false
-        }
-      ]
-    case 'TOGGLE_TODO':
-      return state.map(todo =>
-        (todo.id === action.id)
-          ? {...todo, completed: !todo.completed}
-          : todo
-      )
+    case ADD_CITY:
+      return {
+				selectedCity: action.payload
+			}
     default:
       return state
   }
 }
 
-export default todos
+export default cities

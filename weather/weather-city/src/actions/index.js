@@ -1,12 +1,12 @@
-let nextTodoId = 0
-export const addCity = text => ({
-  type: 'ADD_CITY',
-  id: nextTodoId++,
-  text
+import { ADD_CITY, ADD_LIKE } from "./actionTypes";
+
+export const addCity = city => ({
+  type: ADD_CITY,
+	payload: city
 })
 
-export const addLikeCity = filter => ({
-  type: 'ADD_LIKE_CITY',
-  filter
+export const addLikeCity = city => ({
+  type: ADD_LIKE,
+  payload: city
 })
 
