@@ -4,8 +4,6 @@ const initialState = {
   selectedCity: []
 };
 const cities = (state = initialState, action) => {
-		debugger
-
   switch (action.type) {
     case ADD_CITY:
       return {

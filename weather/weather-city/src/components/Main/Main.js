@@ -5,10 +5,7 @@ import { Favorite } from "../icons/Favorite";
 
 import { connect } from "react-redux";
 import { addCity, addLikeCity } from "../../actions";
-
-import {CirclePlusMinor} from '@shopify/polaris-icons';
 import {SearchMinor} from '@shopify/polaris-icons';
-
 import { getCity } from "../../api/getCity";
 import { getWeather } from "../../api/getWeather";
 import './Main.scss'
@@ -23,7 +20,7 @@ function AutocompleteExample(props) {
 
 
 
-  useEffect(() => {
+	useEffect(() => {
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition((position)=>{
 			let params = {
@@ -36,16 +33,22 @@ function AutocompleteExample(props) {
 			}).catch(err => console.log(err));
 		});
 	  } else {
-		console.log("Not Available");
+			console.log("Not Available");
 		}
-		const likesStorage = JSON.parse(localStorage.getItem('likes'))
-		if(likesStorage){
+		const storage = localStorage.getItem('likes')
+		if(storage && storage[0] !== null){
+		const likesStorage = JSON.parse(storage)
 			handlerWeatherLike(likesStorage)
+			handlerLikes([likesStorage])
 		}
-}, [])
+	}, [])
+	useEffect(() => {
+		handlerWeatherLike(props.likeCity)
+	}, [props.likeCity])
 
-	const handlerWeatherLike = (arr) =>{
-		arr.forEach(element => {
+	const handlerWeatherLike = async (arr) =>{
+		if(arr && arr.length && arr[0] !== undefined && arr[0] !== null){
+			await arr.forEach(element => {
 			let params = {
 				lat: element.lat,
 				lon: element.lon
@@ -55,6 +58,7 @@ function AutocompleteExample(props) {
 				setLikes(result)
 			}).catch(err => console.log(err));
 		});
+		}
 	}
 
   const updateText = useCallback(
@@ -156,7 +160,9 @@ function AutocompleteExample(props) {
 		/>
 		<ul className={options.length ? 'cities' : 'hide'}>
 			{options && options.map(el=>{
-					return ( <li onClick={()=>updateSelection(el)} className="cities__item">{el.formatted}</li> )
+					return ( 
+					<li onClick={()=>updateSelection(el)} className="cities__item">{el.formatted}</li> 
+					)
 				})
 			}
 		</ul>
