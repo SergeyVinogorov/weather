@@ -20,7 +20,7 @@ function AutocompleteExample(props) {
 
 
 
-	useEffect(() => {
+	useEffect(async () => {
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition((position)=>{
 			let params = {
@@ -48,17 +48,21 @@ function AutocompleteExample(props) {
 
 	const handlerWeatherLike = async (arr) =>{
 		if(arr && arr.length && arr[0] !== undefined && arr[0] !== null){
+			let allPromises = []
 			await arr.forEach(element => {
 			let params = {
 				lat: element.lat,
 				lon: element.lon
 			}
-			getWeather(params).then(response=>{
-				let result = likes.concat([response])
-				setLikes(result)
-			}).catch(err => console.log(err));
+			allPromises.push(getWeather(params).then(response=>{
+				return response
+			}))
+		});
+		Promise.all(allPromises).then((values) => {
+			setLikes(values)
 		});
 		}
+
 	}
 
   const updateText = useCallback(
@@ -115,16 +119,22 @@ function AutocompleteExample(props) {
    }
    return result;
 }
-	const prepareWeather =(element)=>{
-		if(element && element.length){
-		return element[0].weather.map((el)=>{
-				return (
-					<Card key={makeid(5)} title={el.main} sectioned>
-						<p>{el.description}</p>
+	const prepareWeather = (element, isLike)=>{
+		return element.length && element.map((el)=>{
+			return(
+			<div className={'wrapper'}>
+				<h2 className="cities__title">{el.name}</h2>
+				<div className="cities__cards">
+					<Card key={makeid(5)} title={el.weather[0].main} sectioned>
+						<p>{el.weather[0].description}</p>
 					</Card>
-				)
-			})
-		}
+					{
+						isLike ? <Favorite className={'cities__icon'}/> : <ThumbUp onClick={()=>{handlerLikes(weather)}} className={"cities__icon"}/>
+					}
+				</div>
+			</div>
+			)
+		})
 	}
 	const handlerLikes =(element)=>{
 		let result = element[0]
@@ -166,26 +176,15 @@ function AutocompleteExample(props) {
 				})
 			}
 		</ul>
-		<div className={weather.length ? 'wrapper' : 'hide'}>
-				<h2 className="cities__title">{props.selectedCity && props.selectedCity.formatted}</h2>
-				<div className="cities__cards">
-					{
-						weather.length ? prepareWeather(weather) : ""
-					}
-					<ThumbUp onClick={()=>{handlerLikes(weather)}} className={"cities__icon"}/>
-				</div>
-		</div>
-			<hr className={likes.length ? 'wrapper' : 'hide'}/>
-			<div className={likes.length ? 'wrapper' : 'hide'}>
-				<h2 className="cities__title">{props.selectedCity && props.selectedCity.formatted}</h2>
-				<div className="cities__cards">
-					{
-						likes.length ? prepareWeather(likes) : ""
-					}
-					<Favorite className={'cities__icon'}/>
-				</div>
-			</div>
 
+			{
+				weather.length ? prepareWeather(weather, false) : ""
+			}
+
+			<hr className={likes.length ? 'wrapper' : 'hide'}/>
+			{
+				likes.length ? prepareWeather(likes, true) : ""
+			}
 		</div>
 	  </div>
 	</AppProvider>
