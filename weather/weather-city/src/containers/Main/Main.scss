@@ -5,6 +5,10 @@
 	width: 100%;
 	justify-content: center;
 	margin-top: 50px;
+	margin-right: 16px;
+	&:last-child{
+		margin-right: 0px;
+	}
 }
 .cities{
 	background-color: #fff;
@@ -42,7 +46,27 @@
 		right: 10px;
 		cursor: pointer;
 	}
+	&__text{
+		width: 225px;
+	}
+	&__input{
+		width: 500px;
+	}
+	&__wrapper{
+		display: flex;
+    flex-direction: column;
+    align-items: center;
+	}
+	&__heading{
+		margin-top: 26px;
+		font-size: 27px;
+		font-weight: 700;
+	}
 }
 .hide{
 	display: none;
+}
+.container{
+	max-width: 1280px;
+	display: flex;
 }
